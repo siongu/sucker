@@ -1,0 +1,65 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        compile_Sdk_Version = 27
+        build_Tools_Version = '27.0.3'
+        min_Sdk_Version = 15
+        target_Sdk_Version = 26
+        kotlin_version = '1.1.3'
+        kotlin_coroutines_version = '0.21'
+        anko_version = '0.10.1'
+        butterknife_version = '8.6.0'
+        retrofit_version = '2.3.0'
+        support_version = '26.1.0'
+        multidex_version = '1.0.2'
+    }
+    ext {
+        sucker_version = '1.0.0'
+        sucker_annotation_version = sucker_version
+        sucker_api_version = sucker_version
+        sucker_compiler_version = sucker_version
+
+        bintrayRepo = 'maven'
+        publishedGroupId = 'com.siongu.sucker'
+        siteUrl = 'https://github.com/siongu/sucker'
+        gitUrl = 'https://github.com/siongu/sucker.git'
+        developerId = 'siongu'
+        developerName = 'siongu'
+        developerEmail = 'zhongwu.xia@gmail.com'
+        licenseName = 'The Apache Software License, Version 2.0'
+        licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        allLicenses = ["Apache-2.0"]
+    }
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+//        classpath 'com.android.tools.build:gradle:3.1.0-alpha09'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        maven {
+            url 'https://dl.bintray.com/siongu/maven'
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

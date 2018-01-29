@@ -1,0 +1,1 @@
+include ':app', ':sucker-annotation', ':sucker-compiler', ':javademo', ':sucker-api'

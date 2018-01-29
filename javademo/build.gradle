@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion compile_Sdk_Version
+    buildToolsVersion build_Tools_Version
+    defaultConfig {
+        applicationId "com.siongu.javademo"
+        minSdkVersion min_Sdk_Version
+        targetSdkVersion target_Sdk_Version
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+
+//    compileOptions {
+//        sourceCompatibility JavaVersion.VERSION_1_8
+//        targetCompatibility JavaVersion.VERSION_1_8
+//    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    compile "com.siongu.sucker:sucker-api:$sucker_version"
+    compile "com.siongu.sucker:sucker-annotation:$sucker_version"
+    annotationProcessor "com.siongu.sucker:sucker-compiler:$sucker_version"
+
+//    annotationProcessor project(':sucker-compiler')
+//    compile project(':sucker-annotation')
+//    compile project(':sucker-api')
+
+}
+
+
