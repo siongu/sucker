@@ -39,13 +39,15 @@ import javax.lang.model.util.Types;
 public class SuckProcessor extends AbstractProcessor {
     private final String ACTIVITY = "android.app.Activity";
     private final String VIEW = "android.view.View";
+    ClassName activity = ClassName.bestGuess(ACTIVITY);
+    ClassName view = ClassName.bestGuess(VIEW);
     Elements elementUtil;
     Types typeUtil;
     Filer filer;
-     Map<String, Class<? extends Annotation>> supportedAnnotationsClass = new LinkedHashMap<>();
-     Set<String> supportedAnnotations = new LinkedHashSet<>();
+    Map<String, Class<? extends Annotation>> supportedAnnotationsClass = new LinkedHashMap<>();
+    Set<String> supportedAnnotations = new LinkedHashSet<>();
 
-     {
+    {
         // support annotations
         supportedAnnotations.add(Consts.ANNOTATIONS_SUCK_VIEW);
         supportedAnnotations.add(Consts.ANNOTATIONS_SUCK_CLICK);
@@ -118,10 +120,10 @@ public class SuckProcessor extends AbstractProcessor {
             FieldSpec target = FieldSpec.builder(TypeName.OBJECT, "target").build();
             fileBuilder.addField(target);
             MethodSpec.Builder injectMethodBuilder = MethodSpec.methodBuilder("suck")
-                                                               .addModifiers(Modifier.PUBLIC)
-                                                               .addAnnotation(Override.class)
-                                                               .returns(TypeName.VOID)
-                                                               .addParameter(TypeName.OBJECT, "o");
+                    .addModifiers(Modifier.PUBLIC)
+                    .addAnnotation(Override.class)
+                    .returns(TypeName.VOID)
+                    .addParameter(TypeName.OBJECT, "o");
             injectMethodBuilder.addStatement("target = o");
             // category annotations
             for (Map.Entry<Class<? extends Annotation>, Set<Element>> annotationClass : rootClass.getValue().entrySet()) {
@@ -150,16 +152,14 @@ public class SuckProcessor extends AbstractProcessor {
     }
 
     private void processView(MethodSpec.Builder injectMethodBuilder, Set<Element> elements) {
+        injectMethodBuilder.beginControlFlow("if((target instanceof $T)||(target instanceof $T))", activity, view);
         for (Element e : elements) {
             SuckView suckView = e.getAnnotation(SuckView.class);
             int id = suckView.value();
-            ClassName activity = ClassName.bestGuess(ACTIVITY);
-            ClassName view = ClassName.bestGuess(VIEW);
-            injectMethodBuilder.beginControlFlow("if((target instanceof $T)||(target instanceof $T))", activity, view);
             injectMethodBuilder.addStatement("(($T)target).$N = (($T)target).findViewById($L)", e.getEnclosingElement()
                     , e.getSimpleName(), e.getEnclosingElement(), id);
-            injectMethodBuilder.endControlFlow();
         }
+        injectMethodBuilder.endControlFlow();
     }
 
     private void processListener(TypeSpec.Builder fileBuilder, MethodSpec.Builder injectMethodBuilder
@@ -169,31 +169,29 @@ public class SuckProcessor extends AbstractProcessor {
         ListenerMethod method = methods[0];
         ClassName listenerType = ClassName.bestGuess(listenerClass.type());
         ClassName parameterType = ClassName.bestGuess(method.parameters()[0]);
-        ClassName activity = ClassName.bestGuess(ACTIVITY);
-        ClassName view = ClassName.bestGuess(VIEW);
         injectMethodBuilder.beginControlFlow("if((target instanceof $T)||(target instanceof $T))"
                 , activity, view);
         for (Element e : elements) {// annotations elements
             SuckClick suckClick = e.getAnnotation(SuckClick.class);
             int[] ids = suckClick.value();
             MethodSpec overideListenerMethod = MethodSpec.methodBuilder(method.name())
-                                                         .addParameter(parameterType, "v")
-                                                         .addAnnotation(Override.class)
-                                                         .returns(TypeName.VOID)
-                                                         .addModifiers(Modifier.PUBLIC)
-                                                         .addStatement("(($T)target).$N(v)", e.getEnclosingElement(), e.getSimpleName())
-                                                         .build();
+                    .addParameter(parameterType, "v")
+                    .addAnnotation(Override.class)
+                    .returns(TypeName.VOID)
+                    .addModifiers(Modifier.PUBLIC)
+                    .addStatement("(($T)target).$N(v)", e.getEnclosingElement(), e.getSimpleName())
+                    .build();
             TypeSpec anonymousListener = TypeSpec.anonymousClassBuilder("")
-                                                 .addSuperinterface(listenerType)
-                                                 .addMethod(overideListenerMethod)
-                                                 .build();
+                    .addSuperinterface(listenerType)
+                    .addMethod(overideListenerMethod)
+                    .build();
             Object listener;
             if (ids.length == 1) {
                 listener = anonymousListener;
             } else {
                 FieldSpec fieldListener = FieldSpec.builder(listenerType, e.getSimpleName().toString() + "Listener")
-                                                   .initializer("$L", anonymousListener)
-                                                   .build();
+                        .initializer("$L", anonymousListener)
+                        .build();
                 fileBuilder.addField(fieldListener);
                 listener = fieldListener.name;
             }

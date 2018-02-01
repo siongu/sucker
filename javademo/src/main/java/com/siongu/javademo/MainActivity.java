@@ -12,7 +12,7 @@ import com.siongu.sucker.annotation.annotations.SuckView;
 import com.siongu.sucker.api.Sucker;
 
 public class MainActivity extends Activity {
-//    @SuckView(R.id.text)
+    @SuckView(R.id.text)
     Button text;
 
     @Override

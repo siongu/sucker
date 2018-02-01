@@ -34,11 +34,11 @@ dependencies {
     compile "com.android.support:support-v4:$support_version"
     compile "com.android.support:appcompat-v7:$support_version"
 
-    compile "com.siongu.sucker:sucker-api:$sucker_version"
-    compile "com.siongu.sucker:sucker-annotation:$sucker_version"
-    kapt "com.siongu.sucker:sucker-compiler:$sucker_version"
+//    compile "com.siongu.sucker:sucker-api:$sucker_version"
+//    compile "com.siongu.sucker:sucker-annotation:$sucker_version"
+//    kapt "com.siongu.sucker:sucker-compiler:$sucker_version"
 
-//    kapt project(':sucker-compiler')
-//    compile project(':sucker-annotation')
-//    compile project(':sucker-api')
+    kapt project(':sucker-compiler')
+    compile project(':sucker-annotation')
+    compile project(':sucker-api')
 }
